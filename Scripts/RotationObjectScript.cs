@@ -1,13 +1,16 @@
 using DG.Tweening;
+using UniRx;
 using UnityEngine;
 
-public class CoinScript : MonoBehaviour
+public class RotationObjectScript : MonoBehaviour
 {
     public float speed;
+    public float duration;
     public Material material;
-    void Update()
+    private CompositeDisposable disposable = new CompositeDisposable();
+    private void Start()
     {
-        RotateObject();
+        Observable.EveryUpdate().Subscribe(x => { RotateObject(); }).AddTo(disposable);
     }
 
     public void OnMouseDown()
@@ -31,6 +34,6 @@ public class CoinScript : MonoBehaviour
 
     public void RotateObject()
     {
-        transform.Rotate(0, 2 * speed * Time.deltaTime, 0);
+        transform.DORotate(new Vector3(0,-360,0), duration, RotateMode.LocalAxisAdd).SetEase(Ease.Linear);
     }
 }
