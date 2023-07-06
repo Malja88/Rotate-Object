@@ -1,39 +1,34 @@
 using DG.Tweening;
-using UniRx;
 using UnityEngine;
 
 public class RotationObjectScript : MonoBehaviour
 {
-    public float speed;
-    public float duration;
-    public Material material;
-    private CompositeDisposable disposable = new CompositeDisposable();
+    [SerializeField] public float speed;
+    [SerializeField] public float duration;
+    [SerializeField] public Material material;
+    [SerializeField] private Color[] colors;
     private void Start()
     {
-        Observable.EveryUpdate().Subscribe(x => { RotateObject(); }).AddTo(disposable);
+        RotateObject();
     }
 
     public void OnMouseDown()
     {
-        SetRandomColor(Random.Range(1, 7));
+        SetRandomColor();
     }
 
-    public void SetRandomColor(int index)
+    public void SetRandomColor()
     {
-        switch (index)
+
+        for (int i = 0; i < colors.Length; i++)
         {
-            case 1: material.DOColor(Color.red, 1); break;
-            case 2: material.DOColor(Color.blue, 1); break;
-            case 3: material.DOColor(Color.yellow, 1); break;
-            case 4: material.DOColor(Color.black, 1); break;
-            case 5: material.DOColor(Color.green, 1); break;
-            case 6: material.DOColor(Color.cyan, 1); break;
-            case 7: material.DOColor(Color.magenta, 1); break;
+            material.DOColor(colors[Random.Range(0, colors.Length)], 1);
         }
     }
 
     public void RotateObject()
     {
-        transform.DORotate(new Vector3(0,-360,0), duration, RotateMode.LocalAxisAdd).SetEase(Ease.Linear);
+        transform.DORotate(new Vector3(0, -360, 0), duration, RotateMode.LocalAxisAdd).SetLoops(-1, LoopType.Restart).SetEase(Ease.Linear);
     }
 }
+
